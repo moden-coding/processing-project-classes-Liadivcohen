@@ -9,6 +9,19 @@ public class Paddle {
     private PApplet canvas;
     private boolean left, right;
 
+    public float getX(){
+        return x;
+    }
+    public float getY(){
+        return y;
+    }
+    public float getWidth(){
+        return w;
+    }
+    public float getHeight(){
+        return h;
+    }
+
     public Paddle(PApplet c) {
         canvas = c;
         w = 100;

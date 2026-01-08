@@ -20,6 +20,7 @@ public class App extends PApplet {
     }
 
     public void setup() {
+
         bubbles = new ArrayList<>(); // Assigns + creates the array list
         for (int i = 0; i < 4; i++) {
             bubbleMaker();
@@ -35,37 +36,48 @@ public class App extends PApplet {
 
     public void draw() {
         background(0);
-
         if (scene == 0) {
-        for (bubble b : bubbles) { // Makes the bubbles actually show up on the screen
-        b.display(); // Dont need to call canvas because you are in the main app
-        b.update();
+            introScene();
         }
-        paddle.display();
-        paddle.movement();
-    }
-}
+        if (scene == 1) {
+            for (int i = bubbles.size() - 1; i >= 0; i--) {
+                bubble b = bubbles.get(i);
 
-    // fill(255);
-    // textSize(50);
-    // textAlign(LEFT); // Makes it allign to the top right
-    // timer = millis() - gameStart;
-    // timer = ((int) (timer / 100)) / 10.0; // thousands of seconds its been
-    // running
-    // text("" + timer, width - 100, 50); // Makes the "" not mad
-    // if (bubbles.size() == 0) {
-    // scene = 1;
-    // readHighScore();
-    // }
-    // if (highscore > timer || highscore == 0) {
-    // highscore = timer;
-    // saveHighScore();
-    // }
-    // } else {
-    // text("Score " + timer, 200, 200);
-    // text("High Score " + highscore, 200, 100);
-    // }
-    // }
+                b.display();
+                b.update();
+
+                if (b.isDead()) {
+                    bubbles.remove(i);
+                    bubbleMaker();
+                }
+            }
+            paddle.display();
+            paddle.movement();
+        }
+
+        // if (scene == 1){
+        // fill(255);
+        // textSize(50);
+        // textAlign(LEFT); // Makes it allign to the top right
+        // timer = millis() - gameStart;
+        // timer = ((int) (timer / 100)) / 10.0; // thousands of seconds its been
+        // running
+        // text("" + timer, width - 100, 50); // Makes the "" not mad
+        // if (bubbles.size() == 0) {
+        // scene = 1;
+        // readHighScore();
+        // }
+        // if (highscore > timer || highscore == 0) {
+        // highscore = timer;
+        // saveHighScore();
+        // }
+        // else {
+        // text("Score " + timer, 200, 200);
+        // text("High Score " + highscore, 200, 100);
+        // }
+        // }
+
+    }
 
     public void saveHighScore() {
 
@@ -81,7 +93,7 @@ public class App extends PApplet {
 
     public void bubbleMaker() {
         int x = (int) random(400);
-        int y = (int) random(400);
+        int y = (int) random(0, 250);
 
         bubble bubble = new bubble(x, y, this);
         bubbles.add(bubble); // Adding to the array list
@@ -93,17 +105,24 @@ public class App extends PApplet {
         if (keyCode == LEFT) {
             paddle.moveLeft();
         }
-        if (keyCode == RIGHT){
+        if (keyCode == RIGHT) {
             paddle.moveRight();
         }
-           
+           if (key == ' ') {
+            scene = 1;
+        }
+
     }
 
-    public void mousePressed() {
-
+    public void introScene() {
+        background(0);
+        textSize(17);
+        text("Rules: Dodge the falling objects using the left and right keys!", 10, 100);
+        text("Everytime an object hits you game is over", 10, 150);
+        text("Press space bar to start the game.", 10, 250);
     }
 
-    public void keyReleased(){
+    public void keyReleased() {
         paddle.stop();
     }
 
