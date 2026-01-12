@@ -9,7 +9,7 @@ public class bubble {
     private int color;
     private int health;
 
-    public bubble(int xPos, int yPos, PApplet c) { // Setting up the variables
+    public bubble(int xPos, int yPos, PApplet c, int startSpeed) { // Setting up the variables
         x = xPos;
         y = yPos;
         size = 45;
@@ -65,12 +65,18 @@ public class bubble {
         return health <= 0;
     }
 
-    public boolean touchesPaddle(Paddle paddle){
-        //Gets paddles edge
-        float closestX = constrain(x, paddle.getX(), , )
-        float closestY = 
+    public boolean touchesPaddle(Paddle paddle) {
+        // Gets paddles edge
+        float closestX = canvas.constrain(x, paddle.getX(), paddle.getX() + paddle.getWidth());
+        float closestY = canvas.constrain(y, paddle.getY(), paddle.getY() + paddle.getHeight());
 
+        // calculate distance from bubble center to closest point on paddle
+        float distance = canvas.dist(x, y, closestX, closestY);
 
-        return false;
+        // if distance is less than radius, they are touching
+        return distance < size / 2;
+    }
+    public void increaseSpeed(int amount){
+        speed += amount;
     }
 }

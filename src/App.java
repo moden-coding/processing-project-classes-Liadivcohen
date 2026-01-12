@@ -14,6 +14,9 @@ public class App extends PApplet {
     int scene;
     double highscore;// Making it in arraylist makes the highscore not reset
     double gameStart;
+    int lastSpeedIncreaseTime;
+    int speedLevel = 0;
+    int speed = 3;
 
     public static void main(String[] args) {
         PApplet.main("App");
@@ -22,16 +25,19 @@ public class App extends PApplet {
     public void setup() {
 
         bubbles = new ArrayList<>(); // Assigns + creates the array list
-        for (int i = 0; i < 4; i++) {
+        speed = 3;
+        for (int i = 0; i < 8; i++) {
             bubbleMaker();
         }
         scene = 0;
         gameStart = millis();
         paddle = new Paddle(this); // *This* giving the bubble access to the screen
+        lastSpeedIncreaseTime = millis();
     }
 
     public void settings() {
-        size(500, 500);
+        size(700, 500);
+        readHighScore();
     }
 
     public void draw() {
@@ -50,33 +56,35 @@ public class App extends PApplet {
                     bubbles.remove(i);
                     bubbleMaker();
                 }
+                if (b.touchesPaddle(paddle)) {
+                    scene = 2;
+                }
+            }
+            if (millis() - lastSpeedIncreaseTime >= 10000) { // 10,000 ms = 10 seconds
+                speedLevel++;
+                increaseBubbleSpeed();
+                lastSpeedIncreaseTime = millis();
             }
             paddle.display();
             paddle.movement();
+            displayingHighScore();
         }
-
-        // if (scene == 1){
-        // fill(255);
-        // textSize(50);
-        // textAlign(LEFT); // Makes it allign to the top right
-        // timer = millis() - gameStart;
-        // timer = ((int) (timer / 100)) / 10.0; // thousands of seconds its been
-        // running
-        // text("" + timer, width - 100, 50); // Makes the "" not mad
-        // if (bubbles.size() == 0) {
-        // scene = 1;
-        // readHighScore();
-        // }
-        // if (highscore > timer || highscore == 0) {
-        // highscore = timer;
-        // saveHighScore();
-        // }
-        // else {
-        // text("Score " + timer, 200, 200);
-        // text("High Score " + highscore, 200, 100);
-        // }
-        // }
-
+        if (scene == 2) {
+            if (timer > highscore || highscore == 0) {
+                highscore = timer;
+                saveHighScore();
+            }
+            readHighScore();
+            gameOver();
+        }
+    }
+    public void increaseBubbleSpeed(){
+        speed++;
+        for (bubble b : bubbles){
+            b.increaseSpeed(1);
+           
+        }
+      
     }
 
     public void saveHighScore() {
@@ -92,13 +100,11 @@ public class App extends PApplet {
     }
 
     public void bubbleMaker() {
-        int x = (int) random(400);
+        int x = (int) random(700);
         int y = (int) random(0, 250);
 
-        bubble bubble = new bubble(x, y, this);
+        bubble bubble = new bubble(x, y, this, speed);
         bubbles.add(bubble); // Adding to the array list
-
-        // for (int i = 0; i < 100; i++){ //Makes 10 bubbles go every click
     }
 
     public void keyPressed() {
@@ -108,18 +114,22 @@ public class App extends PApplet {
         if (keyCode == RIGHT) {
             paddle.moveRight();
         }
-           if (key == ' ') {
+        if (key == ' ' && scene == 0) {
             scene = 1;
+        }
+        if (key == 's') {
+            resetGame();
         }
 
     }
 
     public void introScene() {
         background(0);
-        textSize(17);
-        text("Rules: Dodge the falling objects using the left and right keys!", 10, 100);
-        text("Everytime an object hits you game is over", 10, 150);
-        text("Press space bar to start the game.", 10, 250);
+        textSize(25);
+        text("FALLING OBJECTS!!", 5, 50);
+        text("Rules: Dodge the falling objects using the left and right keys", 5, 100);
+        text("Everytime an object hits you game is over", 5, 150);
+        text("Press space bar to start the game.", 5, 200);
     }
 
     public void keyReleased() {
@@ -139,6 +149,30 @@ public class App extends PApplet {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
+
+    }
+
+    public void gameOver() {
+        background(0);
+        textSize(35);
+        text("Game Over", 10, 200);
+        text("Score " + timer, 10, 300);
+        text("High Score " + highscore, 10, 350);
+        text("Press 's' to start new game!", 10, 250);
+
+    }
+
+    public void resetGame() {
+        setup();
+        scene = 0;
+    }
+
+    public void displayingHighScore() {
+        textSize(25);
+        textAlign(LEFT); // Makes it allign to the top right
+        timer = millis() - gameStart;
+        timer = ((int) (timer / 100)) / 10.0; // thousands of seconds its been running
+        text("" + timer, width - 100, 50); // Makes the "" not mad
 
     }
 

@@ -24,7 +24,7 @@ public class Paddle {
 
     public Paddle(PApplet c) {
         canvas = c;
-        w = 100;
+        w = 50;
         h = 20;
         x = (canvas.width - w) / 2;
         y = canvas.height - 40;
