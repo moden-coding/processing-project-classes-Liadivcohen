@@ -6,23 +6,26 @@ public class Paddle {
     private float w;
     private float h;
     private float speed;
-    private PApplet canvas;
+    private PApplet canvas; // Gives access to the main screen
     private boolean left, right;
 
-    public float getX(){
+    public float getX() { // Makes it accessable to bubble class
         return x;
     }
-    public float getY(){
+
+    public float getY() {
         return y;
     }
-    public float getWidth(){
+
+    public float getWidth() {
         return w;
     }
-    public float getHeight(){
+
+    public float getHeight() {
         return h;
     }
 
-    public Paddle(PApplet c) {
+    public Paddle(PApplet c) {// Declaring the variables
         canvas = c;
         w = 50;
         h = 20;
@@ -46,18 +49,19 @@ public class Paddle {
         left = false;
     }
 
-    public void movement() {
+    public void movement() { // Creates smooth movment for the paddle
         if (left) {
             x -= speed;
         }
 
         if (right) {
             x += speed;
-          
+
         }
-          x = canvas.constrain(x, 0, canvas.width - w); // keep paddle on screen
+        x = canvas.constrain(x, 0, canvas.width - w); // Keeps paddle on screen
     }
-    public void stop(){
+
+    public void stop() {
         left = false;
         right = false;
     }

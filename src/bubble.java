@@ -14,7 +14,7 @@ public class bubble {
         y = yPos;
         size = 45;
         canvas = c; // what the variable is equal to
-        speed = 3;
+        speed = startSpeed;
         color = canvas.color(0, 255, 0);
         health = 3;
 
@@ -27,12 +27,11 @@ public class bubble {
             color = canvas.color(255, 255, 0);
         } else if (health == 1) {
             color = canvas.color(255, 0, 0);
-
         }
     }
 
     public void update() {
-        y += speed;
+        y += speed; // Makes the bubbles move from up to down
         if (y - size / 2 > canvas.height) { // if bubble goes below the screen
             health = 0;
         }
@@ -50,6 +49,7 @@ public class bubble {
 
     public boolean checkTouch(int mouseX, int mouseY) {
         float distanceFromCenter = canvas.dist(x, y, mouseX, mouseY);
+
         if (distanceFromCenter < size / 2) {
             health--;
         }
@@ -61,11 +61,11 @@ public class bubble {
         }
     }
 
-    public boolean isDead() {
+    public boolean isDead() { // Tells if the bubble is off screen
         return health <= 0;
     }
 
-    public boolean touchesPaddle(Paddle paddle) {
+    public boolean touchesPaddle(Paddle paddle) {// Checks to see if the paddle is touching the ball
         // Gets paddles edge
         float closestX = canvas.constrain(x, paddle.getX(), paddle.getX() + paddle.getWidth());
         float closestY = canvas.constrain(y, paddle.getY(), paddle.getY() + paddle.getHeight());
@@ -76,7 +76,8 @@ public class bubble {
         // if distance is less than radius, they are touching
         return distance < size / 2;
     }
-    public void increaseSpeed(int amount){
+
+    public void increaseSpeed(int amount) {
         speed += amount;
     }
 }
